@@ -12,29 +12,29 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@main
-      with:
-        project_id: qwiklabs-gcp-03-279e0a8503eb
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
-        
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    - name: Setup Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@main
+      with:
+        project_id: plenary-totem-425005-c3
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
     - name: Stop JAR on GCP Compute Engine if running
       run: |
-        gcloud compute ssh --zone=asia-south1-c student-04-988a415f9249@demo-123 --command="if pgrep -f SpringBootDemo-0.0.1-SNAPSHOT.jar > /dev/null; then sudo pkill -f SpringBootDemo-0.0.1-SNAPSHOT.jar; else echo 'No process found'; fi"
+        gcloud compute ssh --zone=asia-south1-c meenak_sharma2008@demo-123 --command="if pgrep -f SpringBootDemo-0.0.1-SNAPSHOT.jar > /dev/null; then sudo pkill -f SpringBootDemo-0.0.1-SNAPSHOT.jar; else echo 'No process found'; fi"
         
     - name: Copy JAR to GCP Compute Engine
       run: |
-        gcloud compute scp --zone=asia-south1-c target/*.jar student-04-988a415f9249@demo-123:~
+        gcloud compute scp --zone=asia-south1-c target/*.jar meenak_sharma2008@demo-123:~
 
     - name: Start JAR on GCP Compute Engine
       run: |
-        gcloud compute ssh --zone=asia-south1-c student-04-988a415f9249@demo-123 --command="screen -dm java -jar ~/SpringBootDemo-0.0.1-SNAPSHOT.jar"
+        gcloud compute ssh --zone=asia-south1-c meenak_sharma2008@demo-123 --command="screen -dm java -jar ~/SpringBootDemo-0.0.1-SNAPSHOT.jar"
         sleep 20
-        gcloud compute ssh --zone=asia-south1-c student-04-988a415f9249@demo-123 --command="if pgrep -f SpringBootDemo-0.0.1-SNAPSHOT.jar > /dev/null; then echo 'Server started'; else echo 'Server failed to start'; exit 1; fi"
+        gcloud compute ssh --zone=asia-south1-c meenak_sharma2008@demo-123 --command="if pgrep -f SpringBootDemo-0.0.1-SNAPSHOT.jar > /dev/null; then echo 'Server started'; else echo 'Server failed to start'; exit 1; fi"
 
 
 # Change project_id, service_account_key, --zone, jar_name
